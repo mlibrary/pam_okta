@@ -71,31 +71,31 @@ jobs:
           path: target/package/pam_okta-*.crate
           name: crate
 
-  build-el:
-    needs: build
-    strategy:
-      fail-fast: false
-      matrix:
-        el_version: [8, 9]
-    runs-on: ubuntu-latest
-    container: ghcr.io/umich-iam/pam_okta-build:el${{ matrix.el_version }}
-    steps:
-      - name: Download package
-        uses: actions/download-artifact@v8
-        with:
-          name: crate
-
-      - name: Build RPM
-        run: rpmbuild -ta pam_okta-*.crate
-
-      - name: Upload RPM
-        uses: actions/upload-artifact@v7
-        with:
-          name: el${{ matrix.el_version }}
-          path: |
-            ~/rpmbuild/RPMS/noarch/*
-            ~/rpmbuild/RPMS/x86_64/*
-            ~/rpmbuild/SRPMS/*
+  # build-el:
+  #   needs: build
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       el_version: [8, 9]
+  #   runs-on: ubuntu-latest
+  #   container: ghcr.io/umich-iam/pam_okta-build:el${{ matrix.el_version }}
+  #   steps:
+  #     - name: Download package
+  #       uses: actions/download-artifact@v8
+  #       with:
+  #         name: crate
+  #
+  #     - name: Build RPM
+  #       run: rpmbuild -ta pam_okta-*.crate
+  #
+  #     - name: Upload RPM
+  #       uses: actions/upload-artifact@v7
+  #       with:
+  #         name: el${{ matrix.el_version }}
+  #         path: |
+  #           ~/rpmbuild/RPMS/noarch/*
+  #           ~/rpmbuild/RPMS/x86_64/*
+  #           ~/rpmbuild/SRPMS/*
 
   build-alma-el:
     needs: build
@@ -159,7 +159,7 @@ jobs:
   release:
     if: github.ref_type == 'tag'
     needs:
-      - build-el
+      # - build-el
       - build-alma-el
       - build-deb
     permissions:
